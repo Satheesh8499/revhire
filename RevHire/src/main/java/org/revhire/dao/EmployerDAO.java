@@ -35,6 +35,7 @@ public class EmployerDAO {
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
                     int id = resultSet.getInt("id");
+                    String name=resultSet.getString("employer_name");
                     String password = resultSet.getString("password");
                     String email = resultSet.getString("email");
                     String companyName = resultSet.getString("company_name");
@@ -42,7 +43,7 @@ public class EmployerDAO {
                     String address = resultSet.getString("address");
                     String companyDescription = resultSet.getString("company_description");
                     String industry = resultSet.getString("industry");
-                    return new Employer(id, username, password, email, companyName, contactNumber, address, companyDescription, industry);
+                    return new Employer(id,name,username, password, email, companyName, contactNumber, address, companyDescription, industry);
                 }
             }
         }
@@ -50,7 +51,7 @@ public class EmployerDAO {
     }
     public EmployerDetails  getById(int id){
         String  query= "select employer_name,company_name,contact_number,address from emolyers where id = ?";
-
+      return null;
     }
 }
 

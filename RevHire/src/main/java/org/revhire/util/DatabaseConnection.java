@@ -5,37 +5,28 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DatabaseConnection {
-    private static Connection connection;
-    private static final String DATABASE_URL = "jdbc:mysql://localhost:3306/revhire1";
-    private static final String DATABASE_USERNAME = "root";
-    private static final String DATABASE_PASSWORD = "beastF5$@";
-    private static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
 
-    private DatabaseConnection()  {
+    private static volatile Connection connection = null;
 
-    }
-    public static Connection getConnection() {
-        try {
-            if (connection == null || connection.isClosed()) {
-                synchronized (DatabaseConnection.class) {
-                    if (connection == null || connection.isClosed()) {
-                        try {
-                            Class.forName(JDBC_DRIVER);
-                            connection = DriverManager.getConnection(DATABASE_URL, DATABASE_USERNAME, DATABASE_PASSWORD);
-                        } catch (ClassNotFoundException e) {
-                            throw new RuntimeException("JDBC Driver not found: " + e.getMessage(), e);
-                        } catch (SQLException e) {
-                            throw new RuntimeException("Failed to establish a database connection: " + e.getMessage(), e);
-                        }
+    public static Connection getConnection() throws SQLException {
+        if (connection == null || connection.isClosed()) {
+            synchronized (DatabaseConnection.class) {
+                if (connection == null || connection.isClosed()) {
+                    // Load the JDBC driver
+                    try {
+                        Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+                    } catch (ClassNotFoundException e) {
+                        throw new SQLException("JDBC driver not found", e);
                     }
+
+                    // Define the JDBC URL
+                    String url = "jdbc:sqlserver://localhost;databaseName=RevHire;integratedSecurity=true;encrypt=true;trustServerCertificate=true;";
+
+                    // Establish the connection
+                    connection = DriverManager.getConnection(url);
                 }
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
         }
         return connection;
     }
-
-
-
 }

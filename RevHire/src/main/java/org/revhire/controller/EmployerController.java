@@ -13,6 +13,8 @@ public class EmployerController {
     // Register a new employer
     public void registerEmployer() {
         System.out.println("Employer Registration:");
+        System.out.println("Enter employer name : ");
+        String name=scanner.next();
         System.out.print("Enter username: ");
         String username = scanner.nextLine();
 
@@ -37,7 +39,7 @@ public class EmployerController {
         System.out.print("Enter industry: ");
         String industry = scanner.nextLine();
 
-        Employer employer = new Employer(0, username, password, email, companyName, contactNumber, address, companyDescription, industry);
+        Employer employer = new Employer(0, name,username, password, email, companyName, contactNumber, address, companyDescription, industry);
 
         try {
             employerService.registerEmployer(employer);

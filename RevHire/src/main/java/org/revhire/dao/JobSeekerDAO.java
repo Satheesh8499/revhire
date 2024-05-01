@@ -105,30 +105,34 @@ public class JobSeekerDAO {
 
     public List<Job> allJobs(){
         List<Job> jobs = new ArrayList<>();
-        String query = "SELECT * FROM jobs ";
-        try{
-            Connection c = DatabaseConnection.getConnection();
-            Statement statement = c.createStatement();
-            if(statement.execute(query)){
-                ResultSet resultSet = statement.getResultSet();
-                if(resultSet.next()) {
-                    int id = resultSet.getInt("id");
-                    int employerId = resultSet.getInt("employer_id");
-                    String title = resultSet.getString("title");
-                    String description = resultSet.getString("description");
-                    String location = resultSet.getString("location");
-                    Double salary=resultSet.getDouble("salary");
-                    int experience = resultSet.getInt("experience");
-                    Job job=new Job(id,employerId,title,description,location,salary,experience);
-                    jobs.add(job);
-                }
 
+        // Define the SQL query
+        String sql = "SELECT id, employer_id, title, description, location, salary, experience FROM jobs";
+
+        // Establish a connection
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet resultSet = statement.executeQuery()) {
+
+            // Iterate through the result set
+            while (resultSet.next()) {
+                // Extract data from each row
+                int id = resultSet.getInt("id");
+                int employerId = resultSet.getInt("employer_id");
+                String title = resultSet.getString("title");
+                String description = resultSet.getString("description");
+                String location = resultSet.getString("location");
+                double salary = resultSet.getDouble("salary");
+                int experience = resultSet.getInt("experience");
+
+                // Create a Job object and add it to the list
+                Job job = new Job(id, employerId, title, description, location, salary, experience);
+                jobs.add(job);
             }
-
+        } catch (SQLException e) {
+            e.printStackTrace(); // Handle SQL exception (consider better error handling in production)
         }
-        catch (Exception e){
 
-        }
         return jobs;
     }
 }

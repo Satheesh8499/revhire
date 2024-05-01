@@ -45,6 +45,7 @@ public class JobSeekerController {
                 break;
             case 3:
                 searchJob();
+                break;
             case 4:
 
             case 5:
